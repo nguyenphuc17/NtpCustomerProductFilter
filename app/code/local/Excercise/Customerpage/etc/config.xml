@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+		<Excercise_Customerpage>
+			<version>0.1.0</version>
+		</Excercise_Customerpage>
+	</modules>
+    <frontend>
+        <layout>
+            <updates>
+                <excercise_customerpage module="excercise_customerpage">
+                    <file>excercise_customerpage.xml</file>
+                </excercise_customerpage>
+            </updates>
+        </layout>    
+        <routers>
+            <excercise_customerpage>
+                <use>standard</use>
+                <args>
+                    <module>Excercise_Customerpage</module>
+                    <frontName>customerpage</frontName>
+                </args>
+            </excercise_customerpage>
+        </routers>
+    </frontend>
+    
+    <global>
+        <helpers>
+            <excercise_customerpage>
+                <class>Excercise_Customerpage_Helper</class>
+            </excercise_customerpage>
+        </helpers>
+        <blocks>
+            <customerpage>
+                <class>Excercise_Customerpage_Block</class>
+            </customerpage>
+            <catalog>
+                <rewrite>
+                    <product_list_toolbar>Excercise_Customerpage_Block_Product_List_Toolbar</product_list_toolbar>
+                </rewrite>
+            </catalog>
+        </blocks>
+    </global>
+
+</config>

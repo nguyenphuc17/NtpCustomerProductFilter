@@ -1,0 +1,73 @@
+<layout>
+    <customer_account>
+        <reference name="customer_account_navigation">
+            <action method="addLink">
+                <name>product_list_price_range</name>
+                <path>customerpage/index/index</path>
+                <label>Product List By Price Range</label>
+            </action>
+        </reference>
+        <reference name="head">
+            <block type="core/template" name="jquery.optional" template="excercise/jquery.phtml"/>
+            <action method="addCss"><stylesheet>css/excercise.css</stylesheet></action>
+        </reference>
+    </customer_account>
+
+    <excercise_customerpage_index_ajax>
+        <reference name="content">
+                <!-- Add product list to content -->
+                <block type="catalog/product_list" name="root" template="excercise/list.phtml">
+                    <!-- Add toolbar to product list -->
+                    <block type="catalog/product_list_toolbar" name="product_list_toolbar" template="excercise/list/toolbar.phtml">
+                        <!-- Add pager to toolbar -->
+                        <block type="page/html_pager" name="product_list_toolbar_pager"/>
+                    </block>
+
+                    <!-- Specify toolbar block name -->
+                    <action method="setToolbarBlockName">
+                        <name>product_list_toolbar</name>
+                    </action>
+
+                    <!-- Use custom product collection -->
+                    <action method="setCollection">
+                        <value helper="excercise_customerpage/getProductCollection" />
+                    </action>
+
+                    <!-- Use custom available sort by orders -->
+                    <action method="setAvailableOrders">
+                        <value helper="excercise_customerpage/getAvailableOrders" />
+                    </action>
+
+                    <!-- Set the default sort by order -->
+                    <action method="setSortBy">
+                        <value>price</value>
+                    </action>
+
+                    <!-- Set default direction to ascending -->
+                    <action method="setDefaultDirection">
+                        <value>asc</value>
+                    </action>
+                    <action method="setColumnCount">
+                        <column>3</column>
+                    </action>
+                    <reference name="product_list_toolbar">
+                        <action method="setCurrentLimitValue"><limit>10</limit></action>
+                    </reference>
+                </block>
+        </reference>
+    </excercise_customerpage_index_ajax>
+    <excercise_customerpage_index_index>
+        <update handle="customer_account" />
+        <reference name="my.account.wrapper">
+            <block type="customerpage/list" name="excercise_customerpage_content" template="excercise/customerpage.phtml"/>
+        </reference>
+
+        <reference name="customer_account_navigation">
+            <action method="setActive">
+                <path>customerpage/index/index</path>
+            </action>
+        </reference>
+
+    </excercise_customerpage_index_index>
+
+</layout>

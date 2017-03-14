@@ -1,0 +1,71 @@
+<h2 class="page-title"><?php echo $this->__('Product List by Price Range') ?></h2>
+<form name="priceForm" id="priceForm">
+    <div class="price-mode">
+
+        <label><?php echo $this->__('Low Range') ?>    </label>
+        <div class="input-box">
+            <input type="text" class="required-entry validate-number" name="minprice" value="<?php echo Mage::app()->getRequest()->getParam('minprice') ?>">
+        </div>
+
+        <label><?php echo $this->__('High Range') ?>    </label>
+        <div class="input-box">
+            <input type="text" class="required-entry validate-number" name="maxprice" value="<?php echo Mage::app()->getRequest()->getParam('maxprice') ?>">
+        </div>
+        <div class="actions">
+            <button class="button" type="button" id="submitFilter" title="<?php echo $this->__('Filter') ?>">
+                <span>
+                    <span><?php echo $this->__('Filter') ?></span>
+                </span>
+            </button>
+        </div>
+        <span id="custom_validation" class="validation-advice">&nbsp;</span>
+    </div>
+<span class="please-wait" style="display:none;">
+            <img src="<?php echo $this->getSkinUrl('images/opc-ajax-loader.gif') ?>" alt="<?php echo Mage::helper('core')->quoteEscape($this->__('Loading next step...')) ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Loading...')) ?>" class="v-middle" /> <?php echo $this->__('Loading...') ?>
+    </span>
+</form>
+<div class="dashboard">
+        <?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+                <?php echo $this->getChildHtml('product_list') ?>
+    </div>
+
+<script>
+    jQuery('.toolbar').find('a').click(function(e){
+        e.preventDefault();
+        requestAjax(jQuery(this).attr('href'));
+    });
+    jQuery('#submitFilter').click(function(){
+        requestAjax('<?php echo Mage::getUrl('customerpage/index/ajax')?>');
+    });
+    function requestAjax(url){
+        var formId = 'priceForm';
+        var myForm = new VarienForm(formId, true);
+        var min_price = jQuery('input[name="minprice"]').val();
+        var max_price = jQuery('input[name="maxprice"]').val();
+        if (myForm.validator.validate()) {
+            if(parseFloat(max_price)>parseFloat(5*min_price))
+            {
+                jQuery('#custom_validation').html('<?php echo $this->__('High Range no more than 5x higher than the entered Low Range') ?>');
+                jQuery('#custom_validation').show();
+            }
+            else if(parseFloat(max_price)<=parseFloat(min_price)){
+                jQuery('#custom_validation').html('<?php echo $this->__('High Range must be larger than Low Range') ?>');
+                jQuery('#custom_validation').show();
+            }
+            else{
+                jQuery('#custom_validation').hide();
+                jQuery('.please-wait').show();
+                jQuery.ajax(
+                    {
+                        url: url,
+                        data: {minprice: min_price, maxprice: max_price},
+                        type: "POST",
+                        success: function (response) {
+                            jQuery('.dashboard').html(response);
+                            jQuery('.please-wait').hide();
+                        }
+                    });
+            }
+        }
+    }
+</script>
